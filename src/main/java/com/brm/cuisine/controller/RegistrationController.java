@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("registration")
@@ -22,6 +19,18 @@ public class RegistrationController {
     @PostMapping
     public ResponseEntity<String> signUp(@RequestBody Lead lead){
         String token = registrationService.createUser(lead);
+        return new ResponseEntity<>(
+                token,
+                HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<String> signIn(@RequestParam("username") String username,
+                                         @RequestParam("password") String password){
+        String token = registrationService.findUserByUsernameAndPassword(username, password);
+        if (token == null){
+            throw new IllegalArgumentException("Error, user not exists");
+        }
         return new ResponseEntity<>(
                 token,
                 HttpStatus.OK);

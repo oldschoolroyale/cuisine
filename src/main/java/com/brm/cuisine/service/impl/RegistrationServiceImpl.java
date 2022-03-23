@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -19,5 +21,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     public String createUser(Lead lead) {
         registrationRepository.save(lead);
         return String.format("%s%s", lead.getEmail(), lead.getName());
+    }
+
+    @Override
+    public String findUserByUsernameAndPassword(String username, String password) {
+        Lead lead = registrationRepository.findByUsernameAndPassword(username, password);
+        if (lead != null)
+            return String.format("%s%s", lead.getEmail(), lead.getName());
+        else
+            return null;
     }
 }
